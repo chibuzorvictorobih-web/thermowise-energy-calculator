@@ -1,6 +1,8 @@
 # ThermoWise 🌡️
 ### Industrial Heat-Recovery and Energy Decision-Support Calculator
 
+**Live calculator:** [Open ThermoWise](https://thermowise-energy-calculator.streamlit.app/)
+
 **ThermoWise** is an interactive **Python + Streamlit** educational application. A user can provide their own thermal-process, financial, and emissions assumptions to estimate sensible waste-heat potential and compare three ways of supplying the same annual useful heating demand.
 
 > **Scope:** an educational **pre-feasibility tool**. It is not a certified heat-exchanger design, a plant energy audit, or a basis for an investment or operating decision without further engineering verification.
@@ -124,10 +126,10 @@ See [VALIDATION.md](VALIDATION.md) for the independent worked example, test cove
 
 ## Deploy and share
 
-Follow [DEPLOYMENT.md](DEPLOYMENT.md) to put the repository on GitHub and deploy `app.py` to Streamlit Community Cloud. Add the actual live links here **after** deployment:
+ThermoWise is deployed on Streamlit Community Cloud. Use the links below to open the application or review its source code:
 
-- **Live application:** _Add live Streamlit URL_
-- **Source repository:** _Add published GitHub URL_
+- **Live application:** [Launch ThermoWise](https://thermowise-energy-calculator.streamlit.app/)
+- **Source repository:** [View source code on GitHub](https://github.com/chibuzorvictorobih-web/thermowise-energy-calculator)
 
 ## Project status
 
