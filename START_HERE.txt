@@ -1,13 +1,39 @@
-ThermoWise TASK 4 — quick start
-================================
-1. Extract this ZIP.
-2. Copy its app.py, calculations.py, requirements.txt, test_calculations.py,
-   VALIDATION.md and .gitignore into your existing ThermoWise-Energy-Calculator
-   folder. Choose Replace for the files that already exist.
-   DO NOT overwrite or remove the existing .venv environment folder.
-3. In VS Code Terminal, from the project folder:
-   python -m pip install -r requirements.txt
-   python -m unittest -v test_calculations.py
-   python -m streamlit run app.py
-4. Open http://localhost:8501 if necessary.
-5. Read VALIDATION.md for manual test cases and engineering assumptions.
+THERMOWISE 2.0 — FINAL PACKAGE
+====================================
+
+THIS IS ONE COMPLETE PROJECT FOLDER. YOU DO NOT NEED TO COMBINE IT
+WITH ANY EARLIER THERMOWISE ZIP FILES.
+
+QUICKEST WAY TO OPEN IT ON YOUR WINDOWS LAPTOP
+------------------------------------------------
+1. Extract the ZIP into a normal folder.
+2. Open the extracted 'ThermoWise_2.0_FINAL' folder.
+3. Double-click RUN_THERMOWISE_WINDOWS.bat.
+4. Wait for the tests and dependencies (internet may be needed).
+5. Open http://localhost:8501 in Chrome when Streamlit starts.
+6. Select the fifth tab, 'Decentralised System'.
+7. Click 'Run Hourly Energy Simulation'.
+
+The 4 older tabs are also present.
+
+IF WINDOWS BLOCKS THE .BAT FILE
+--------------------------------
+Open VS Code > Terminal > New Terminal in this extracted folder.
+Run these commands individually:
+
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m unittest discover -s . -p "test_*.py" -v
+.\.venv\Scripts\python.exe -m streamlit run app.py
+
+If 'py' does not work, use 'python' in the first line.
+Do not double-click app.py itself.
+
+TO PUBLISH THE VERSION 2.0 UPDATE
+---------------------------------
+Read DEPLOYMENT.md. You do NOT need a new GitHub repository.
+The existing live website and main branch remain unchanged until
+this new package is committed and Streamlit rebuilds.
+
+Read RELEASE_CHECKLIST.md for the quick on-screen tests.
+This is a tested code package, not a guarantee of industrial feasibility.

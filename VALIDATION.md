@@ -79,3 +79,14 @@ There are **24 automated test cases**, covering the reference values, conservati
 ## Version and privacy
 
 No personal computer paths, credentials, confidential plant operating data, or proprietary site figures are included. All example inputs are synthetic; do not enter confidential employer information into a public demo.
+
+
+## Version 2.0 — hourly simulator release review
+
+The decentralised simulator is implemented separately in `decentralised.py`. The original 24 annual-model tests remain in place. An additional 22 hourly tests and 12 release tests bring the suite to **58** automated test methods.
+
+The new release tests verify the worked 24-hour example, storage state-of-charge bookkeeping, demand/solar/waste conservation, heat pump and storage power limits, zero-demand behaviour, zero/PV and storage edge cases, extreme-number overflow rejection, and 60 reproducible randomized hourly scenarios (fixed random seed).
+
+**Default 24-hour worked example:** demand = 2,181 kWh_th; operating costs = 256.59 (boiler-only), 167.46 (grid heat pump + boiler), 43.24 (PV + waste heat + TES + HP) in illustrative currency units; hybrid operational emissions = 72.06 kg CO2e. These figures are period-specific, not annual or sourced from field measurements.
+
+**Validation boundary:** Automated tests and Python syntax checks have been executed locally. Installation, Streamlit browser rendering, file upload and the public hosted site require human smoke testing. Neither the unit suite nor GitHub Actions establish true industrial thermodynamic feasibility or provable global dispatch optimality.

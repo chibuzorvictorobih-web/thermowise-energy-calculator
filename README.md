@@ -1,137 +1,127 @@
-# ThermoWise 🌡️
-### Industrial Heat-Recovery and Energy Decision-Support Calculator
+# ThermoWise 2.0 🌡️
+### Industrial energy calculator + decentralised thermal energy simulation
 
-**Live calculator:** [Open ThermoWise](https://thermowise-energy-calculator.streamlit.app/)
+**Live website:** [ThermoWise on Streamlit](https://thermowise-energy-calculator.streamlit.app/)  
+**Code repository:** [ThermoWise on GitHub](https://github.com/chibuzorvictorobih-web/thermowise-energy-calculator)
 
-**ThermoWise** is an interactive **Python + Streamlit** educational application. A user can provide their own thermal-process, financial, and emissions assumptions to estimate sensible waste-heat potential and compare three ways of supplying the same annual useful heating demand.
+> **Release status:** This folder is the prepared **2.0 release package**. The live website will only show version 2.0 **after** this code is committed to the connected GitHub repository and Streamlit rebuilds the app. Do not assume the link already has the upgraded features.
 
-> **Scope:** an educational **pre-feasibility tool**. It is not a certified heat-exchanger design, a plant energy audit, or a basis for an investment or operating decision without further engineering verification.
+## Overview
 
-## What users can calculate
+ThermoWise is an **educational engineering pre-feasibility application** built in Python and Streamlit. The original industrial waste-heat calculator remains intact. Version 2.0 adds a separate hourly, rule-based **decentralised thermal-energy system simulator** for solar PV, heat pumps, waste-heat recovery, thermal storage and backup boilers.
 
-- Available sensible thermal power from mass flow, specific heat, and hot-fluid temperature drop.
-- Estimated annual recovered heat and the amount actually useful toward a specified annual heat demand.
-- Preliminary countercurrent heat-exchanger **terminal temperature-approach screening**.
-- Purchased energy, energy-only operating expenditure, and operational CO₂-equivalent emissions for:
-  - Boiler-only heating (reference scenario)
-  - Waste-heat recovery with a backup boiler (when screening passes)
-  - Electric heat pump
-- Annual savings versus the boiler reference, **simple** capital payback, and minimum annual operating-cost and operational-emissions choices.
-- Downloadable comparison results in CSV format and visual comparisons with horizontal bar charts.
+The application estimates energy balances, purchased energy, operating costs and **operational** greenhouse-gas emissions using user-defined assumptions. It **does not** certify equipment sizing, forecast real plant performance, optimise investment decisions, or solve global optimal control.
 
-## Quick start
+## Five tabs
 
-Requires **Python 3.12 or 3.13** and an internet connection for the initial package installation.
+1. **Engineering Inputs** — thermal and cost inputs for the original annual heat-recovery scenarios.
+2. **Results** — original annual energy, cost and emissions comparison, graphs and CSV export.
+3. **Methodology** — governing engineering formulas and simplifications.
+4. **Validation** — five built-in consistency checks for the original annual model.
+5. **Decentralised System** — new hour-by-hour hybrid thermal energy system with an editable example and hourly CSV upload.
 
-```bash
-python -m venv .venv
-```
+## What's new in version 2.0
 
-**Windows (PowerShell):** install packages with the environment's Python (no shell activation required):
+- **Solar PV:** installed kWp × irradiance × constant performance ratio.
+- **Heat pump:** configurable heating COP and thermal output limit.
+- **Waste heat:** hourly source availability subject to a preliminary exchanger temperature-approach screen.
+- **Thermal energy storage (TES):** rated capacity, charge and discharge powers, initial stored heat, round-trip efficiency and hourly standby losses.
+- **Controller:** either simple marginal **cost-aware** dispatch or **heat-pump-first** dispatch; **not** a globally optimal controller.
+- **Three equal-demand comparisons:** boiler-only, grid-powered heat pump + boiler, and decentralised hybrid system.
+- **Outputs:** costs, emissions, grid imports, fuel purchases, energy-flow charts, storage behaviour and downloadable hourly/results CSV files.
+- **Data input:** editable 24-hour synthetic example or user-provided hourly CSV (1 to 8,760 one-hour records).
+
+## Start in Windows (simplest)
+
+1. **Extract the entire ZIP**. Do not run Python from inside the compressed ZIP.
+2. Open the `ThermoWise_2.0_FINAL` extracted folder.
+3. Double-click **`RUN_THERMOWISE_WINDOWS.bat`**. This creates `.venv` if necessary, installs dependencies, runs the engineering tests, and starts Streamlit. Internet is required the first time for installing packages.
+4. Open the browser address from the terminal (usually `http://localhost:8501`).
+5. Choose **Decentralised System** and click **Run Hourly Energy Simulation** with its defaults.
+
+If Windows cannot locate Python, install Python 3.12 or 3.13 and use the manual commands in [START_HERE.txt](START_HERE.txt).
+
+## Manual commands
 
 ```powershell
+py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m unittest discover -s . -p "test_*.py" -v
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-**macOS / Linux:**
+## Sample result (synthetic 24-hour profile)
 
-```bash
-./.venv/bin/python -m pip install -r requirements.txt
-./.venv/bin/python -m streamlit run app.py
+Default example heat demand is **2,181 kWh_th over 24 hours** (not annual energy). With the included example equipment, prices and emissions assumptions:
+
+| Same-demand scenario | 24-hour energy-only cost (example currency units) | 24-hour operational emissions (kg CO₂e) |
+| --- | ---: | ---: |
+| Boiler only | 256.59 | 513.18 |
+| Grid heat pump + boiler | 167.46 | 282.66 |
+| PV + waste heat + TES + heat pump | 43.24 | 72.06 |
+
+These are hypothetical educational outcomes, **not prices, operating savings, or carbon factors verified for any facility**. The hybrid is cheaper for this example only; other user inputs can reverse the comparison. The model has no capital cost calculation for this hybrid simulation and no net-present-value claims.
+
+## Hourly CSV format
+
+Three required numeric columns (optional `hour` column is ignored):
+
+```csv
+demand_kwh,irradiance_kw_m2,waste_availability
+80,0.0,1.0
+90,0.5,0.75
+120,0.8,0.0
 ```
 
-Then open the local address shown in the terminal, commonly `http://localhost:8501`.
+- `demand_kwh`: useful heat demand for each hour, kWh_th, ≥ 0.
+- `irradiance_kw_m2`: average solar irradiance over the hour, 0–1.5 kW/m².
+- `waste_availability`: fraction of rated usable recovered heat, 0–1.
 
-## Example (synthetic inputs)
+There must be **1–8,760 rows**. Each row is an hour; the model does not infer or repair missing timestamps. Download the complete [example file](hourly_example.csv).
 
-| Input | Example value |
-| --- | ---: |
-| Hot fluid mass flow | 2 kg/s |
-| Hot inlet / outlet temperature | 80°C / 50°C |
-| Specific heat capacity | 4.18 kJ/(kg·K) |
-| Annual operating hours | 4,000 h |
-| Assumed heat-recovery factor | 50% |
-| Heat sink return / supply temperature | 35°C / 45°C |
-| Minimum exchanger temperature approach | 5 K |
-| Annual useful heat demand | 600,000 kWh_th |
-| Boiler efficiency | 85% |
-| Heat pump coefficient of performance (COP) | 3.5 |
-| Fuel / electricity tariff | 0.12 / 0.18 currency units per kWh |
-| Fuel / electricity emission factor | 0.20 / 0.40 kg CO₂e per purchased kWh |
-| Recovery auxiliary electrical load | 2 kW at full use |
-| Recovery / heat pump capital cost | 60,000 / 90,000 currency units |
+## Verification
 
-**Expected outputs from the example:**
+**58 automated test methods** pass locally in the release package: 24 original annual-model tests, 22 hourly-component tests, and 12 additional release checks (including randomized hourly balance trials). Test locally with:
 
-- Available sensible heat: **250.80 kW**.
-- Estimated recovered heat: **125.40 kW**, or **501,600 kWh_th/year**.
-- Temperature-approach screen: **passes** (35 K at the hot end, 15 K at the cold end).
-
-| Option | Energy-only operating cost (currency/year) | Operational emissions (t CO₂e/year) | Simple payback (years) |
-| --- | ---: | ---: | ---: |
-| Boiler only | 84,705.88 | 141.18 | — |
-| Waste heat + boiler | 15,331.76 | 26.35 | 0.86 |
-| Electric heat pump | 30,857.14 | 68.57 | 1.67 |
-
-All inputs are **illustrative** and **not measured data**. The currency is a placeholder; changing its label does **not** convert exchange rates.
-
-## Engineering equations
-
-For constant-specific-heat sensible cooling of a hot fluid stream:
-
-```text
-Available thermal power (kW) = mass flow (kg/s) × cp (kJ/(kg·K)) × (hot inlet − hot outlet) (K)
-Potential recovered heat (kWh/year) = available thermal power × (recovery factor/100) × operating hours
-Useful recovered heat = min(potential recovered heat, annual heat demand), if temperature screen passes
-Boiler fuel input = heating demand / boiler efficiency
-Heat pump electricity = heating demand / heat pump COP
-Annual operating cost = purchased fuel × fuel price + purchased electricity × electricity price
-Operational emissions = purchased fuel × fuel factor + purchased electricity × electricity factor
-Simple payback = initial investment / positive annual operating-cost saving
+```powershell
+py -m unittest discover -s . -p "test_*.py" -v
 ```
 
-Waste-heat recovery is **excluded from the comparison** when the hot-end or cold-end terminal temperature difference is smaller than the user-defined minimum approach. Passing this screen is **not proof of exchanger feasibility**.
+The automated GitHub workflow performs the same suite for Python 3.12 and 3.13 after publication. The **Streamlit browser interface and deployed website must still be manually smoke-tested** after release; numerical unit tests alone cannot prove UI or hosting compatibility.
 
-## Validation and limitations
+See [VALIDATION.md](VALIDATION.md) and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
 
-To run the **24 automated calculation tests**:
+## Engineering limitations
 
-```bash
-python -m unittest -v test_calculations.py
-```
+- Fixed time step: 1 hour; no forecasts, uncertainty, equipment start-up or minimum operating load.
+- Fixed heat-pump COP and PV performance ratio; no module temperature correction, inverter clipping or changing source temperatures.
+- Exchanger screening checks **terminal temperature approaches only**, not full exchanger feasibility, heat capacity rates, heat-transfer areas, fouling or pinch.
+- Heat source and demand are assumed to match the hourly series; annual profiles require actual annual input rows.
+- No electrical battery, general building electric loads, network power flow, grid export, PV investment costs or thermal-system capital economics in the new hourly simulator.
+- TES energy loss and efficiency are simplified; initial stored heat must be supplied by the user and should not be mistaken for free energy.
+- “Cost-aware” is a **rule-based heuristic**, not an economic optimisation solution. “Lowest cost” and “lowest emissions” mean among the **three simulated scenarios for the selected inputs**, not universally optimal engineering solutions.
 
-See [VALIDATION.md](VALIDATION.md) for the independent worked example, test coverage, manual checks, and limitations.
-
-**Key limitations:** steady sensible heat, constant cp, no phase change; annual source and demand assumed coincident; no heat-exchanger sizing or whole-profile pinch analysis; fixed COP and boiler efficiency; simplified recovery auxiliaries; no thermal storage, maintenance, tax, finance, discount rate, embodied emissions, or lifecycle analysis. A lower modeled cost is **not a general recommendation** for a real facility.
-
-## Privacy and source data
-
-- The repository uses **synthetic, user-editable example values**. No proprietary refinery data, organization-specific performance data, or private computer paths are required.
-- User calculations occur in the app session; the project code does not implement a database for storing user entries. Hosting providers may process ordinary service telemetry.
-- Do **not** submit employer-confidential data to a publicly hosted demonstration.
-- The `.gitignore` file keeps local Python environments, temporary files and `.env` files out of a standard Git commit. Review all files manually before uploading.
-
-## Repository files
+## Folder contents
 
 | File | Purpose |
 | --- | --- |
-| `app.py` | Streamlit interface and interactive charts |
-| `calculations.py` | Pure engineering and economic functions |
-| `test_calculations.py` | 24 automated unit tests |
-| `requirements.txt` | Python dependencies |
-| `VALIDATION.md` | Verification cases, equations, constraints and limitations |
-| `DEPLOYMENT.md` | GitHub + Streamlit Community Cloud publishing instructions |
-| `.github/workflows/tests.yml` | GitHub Actions test automation on push |
+| `app.py` | All five Streamlit tabs, graphs, inputs and exports |
+| `calculations.py` | Original thermal/economic calculation functions |
+| `decentralised.py` | New hourly dispatch and energy accounting |
+| `test_calculations.py` | 24 original tests |
+| `test_decentralised.py` | 22 hourly tests |
+| `test_release.py` | 12 additional physics/edge-case tests |
+| `hourly_example.csv` | Synthetic 24-hour sample profile |
+| `DECENTRALISED_MODEL.md` | Engineering and controller description |
+| `VALIDATION.md` | Verification evidence and limitations |
+| `RELEASE_CHECKLIST.md` | Manual checks before/after publishing |
+| `DEPLOYMENT.md` | Update existing GitHub and Streamlit application |
+| `.github/workflows/tests.yml` | Automatically tests changes to `main` |
 
-## Deploy and share
+## Privacy
 
-ThermoWise is deployed on Streamlit Community Cloud. Use the links below to open the application or review its source code:
-
-- **Live application:** [Launch ThermoWise](https://thermowise-energy-calculator.streamlit.app/)
-- **Source repository:** [View source code on GitHub](https://github.com/chibuzorvictorobih-web/thermowise-energy-calculator)
+All example data is synthetic. No private laptop paths, employer-specific operating conditions, authentication tokens or database connections are required. **Never upload confidential industrial information** to a publicly hosted example application. Inputs are handled in the Streamlit session, subject to the hosting provider's normal platform processing and telemetry.
 
 ## Project status
 
-**Version 1.0 — educational demonstrator.** This project demonstrates integration of thermal engineering, numerical modelling, comparative energy economics, environmental indicators, input validation, and a usable web interface. It does not claim to solve a full plant optimisation problem.
-
+**Prepared version 2.0 release candidate.** Numerical tests and syntax checks pass locally. Deployment requires updating the GitHub repository, after which Streamlit Community Cloud normally rebuilds the connected app. Only mark the release “Live” when post-deployment UI checks pass.
