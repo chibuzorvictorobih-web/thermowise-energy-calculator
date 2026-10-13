@@ -1,0 +1,13 @@
+ThermoWise TASK 4 — quick start
+================================
+1. Extract this ZIP.
+2. Copy its app.py, calculations.py, requirements.txt, test_calculations.py,
+   VALIDATION.md and .gitignore into your existing ThermoWise-Energy-Calculator
+   folder. Choose Replace for the files that already exist.
+   DO NOT overwrite or remove the existing .venv environment folder.
+3. In VS Code Terminal, from the project folder:
+   python -m pip install -r requirements.txt
+   python -m unittest -v test_calculations.py
+   python -m streamlit run app.py
+4. Open http://localhost:8501 if necessary.
+5. Read VALIDATION.md for manual test cases and engineering assumptions.
